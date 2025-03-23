@@ -1,0 +1,16 @@
+html {
+  margin: 0;
+  padding: 0;
+  width: 600px;
+  height: 600px;
+}
+
+#acho {
+  display: block;
+  margin: auto;
+}
+
+#dialog-box {
+  text-align: center;
+  font-size: medium;
+}

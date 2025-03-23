@@ -1,0 +1,17 @@
+{
+  "name": "AIOE",
+  "version": "0.0.0",
+  "manifest_version": 3,
+  "description": "The all-in-one Chrome extension for web developers. ",
+  "action": {
+    "default_popup": "src/popup/index.html",
+    "default_title": "TODO: Title",
+    "default_icon": "./logo.png"
+  },
+  "background": {
+    "service-worker": "src/serviceWorker/index.ts"
+  },
+  "host_permissions": ["https://*/*", "http://*/*"],
+  "icons": { "659": "logo.png" },
+  "permissions": ["cookies", "sidePanel"]
+}
