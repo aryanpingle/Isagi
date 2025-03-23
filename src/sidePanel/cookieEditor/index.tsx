@@ -1,5 +1,5 @@
 import { useCommonManagement } from "@/hooks/useCommonManagement";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { CookieTile } from "./components/CookieTile";
 
@@ -16,12 +16,31 @@ const CookieEditorPage = () => {
     });
   }, [url, setCookies]);
 
+  const handleDeleteCookie = useCallback(
+    (cookie: chrome.cookies.Cookie) => {
+      chrome.cookies.remove({
+        name: cookie.name,
+        url: url,
+      });
+    },
+    [url]
+  );
+
   return (
-    <>
-      {cookies.map((cookie) => (
-        <CookieTile cookie={cookie} />
-      ))}
-    </>
+    <div>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "stretch",
+          gap: "0.25em",
+        }}
+      >
+        {cookies.map((cookie) => (
+          <CookieTile cookie={cookie} onDeleteCookie={handleDeleteCookie} />
+        ))}
+      </div>
+    </div>
   );
 };
 

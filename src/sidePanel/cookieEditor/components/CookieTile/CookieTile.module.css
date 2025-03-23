@@ -1,0 +1,37 @@
+.cookie_tile {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  border: 0.2em solid black;
+  border-radius: 0.4em;
+
+  background-color: aquamarine;
+}
+
+.cookie_tile-header {
+  padding: 0.5em;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 0.5em;
+  cursor: pointer;
+}
+
+.cookie_tile-header_info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  overflow: hidden;
+}
+
+.cookie_tile-domain {
+  font-size: 0.75em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cookie_tile-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

@@ -1,8 +1,10 @@
 import { getCurrentWindowActiveTab } from "@/utils/tabs";
 
+type Listener = () => void;
+
 class URLStore {
   url?: string;
-  listeners: Function[] = [];
+  listeners: Listener[] = [];
 
   constructor() {
     // Set the current URL
@@ -23,11 +25,10 @@ class URLStore {
     });
   }
 
-  subscribe = (listener: Function) => {
-    const thisRef = this;
-    thisRef.listeners.push(listener);
+  subscribe = (listener: Listener) => {
+    this.listeners.push(listener);
     return () => {
-      thisRef.listeners = thisRef.listeners.filter((l) => l !== listener);
+      this.listeners = this.listeners.filter((l) => l !== listener);
     };
   };
 
