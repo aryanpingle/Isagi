@@ -1,10 +1,47 @@
 .button {
+  font: inherit;
   padding: 0.5em;
-  border: 1px solid black;
+  border: 0.1rem solid black;
   border-radius: 0.2em;
   font-size: 0.75em;
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
+
+  font-weight: 600;
+
+  transition: 50ms linear;
+}
+
+/* Button with shadow */
+
+.button--with_shadow:not(.button--disabled) {
+  box-shadow: 2px 2px 0 black;
+}
+
+.button--with_shadow:not(.button--disabled):hover {
+  transform: translate(2px, 2px);
+  box-shadow: 0px 0px 0 black;
+}
+
+/* Variants */
+
+.button--variant-primary {
+  background-color: deeppink;
+  color: black;
+}
+
+.button--variant-neutral {
+  background-color: inherit;
+  color: black;
+}
+
+/* Disabled */
+
+.button--disabled {
+  background-color: #a0a0a0;
+  color: #3c3c3c;
+  border-color: currentColor;
+  cursor: not-allowed;
 }

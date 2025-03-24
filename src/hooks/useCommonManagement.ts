@@ -1,10 +1,10 @@
 import { useEffect, useReducer, useSyncExternalStore } from "react";
-import { URL_STORE } from "./useURL";
+import { Tab, TAB_STORE } from "./useTab";
 
 export type APP_THEME = "dark" | "light";
 
 export type CommonManagementState = {
-  url?: string;
+  tab?: Tab;
   theme: APP_THEME;
 };
 
@@ -12,9 +12,9 @@ const initialState: CommonManagementState = {
   theme: "dark",
 };
 
-type ACTION_SET_URL = {
-  name: "SET_URL";
-  payload: string;
+type ACTION_SET_TAB = {
+  name: "SET_TAB";
+  payload: Tab;
 };
 
 type ACTION_SET_THEME = {
@@ -22,16 +22,16 @@ type ACTION_SET_THEME = {
   payload: APP_THEME;
 };
 
-export type CommonManagementAction = ACTION_SET_URL | ACTION_SET_THEME;
+export type CommonManagementAction = ACTION_SET_TAB | ACTION_SET_THEME;
 
 const reducer = (
   prevState: CommonManagementState,
   action: CommonManagementAction
 ): CommonManagementState => {
   switch (action.name) {
-    case "SET_URL": {
+    case "SET_TAB": {
       const { payload } = action;
-      return { ...prevState, url: payload };
+      return { ...prevState, tab: payload };
     }
     case "SET_THEME": {
       const { payload } = action;
@@ -41,17 +41,17 @@ const reducer = (
 };
 
 export const useCommonManagement = () => {
-  const url = useSyncExternalStore(URL_STORE.subscribe, URL_STORE.getSnapshot);
+  const tab = useSyncExternalStore(TAB_STORE.subscribe, TAB_STORE.getSnapshot);
 
   const [state, dispatch] = useReducer(reducer, {
     ...initialState,
-    url: url,
-  });
+    tab,
+  } as CommonManagementState);
 
   useEffect(() => {
-    if (!url) return;
-    dispatch({ name: "SET_URL", payload: url });
-  }, [url]);
+    if (!tab) return;
+    dispatch({ name: "SET_TAB", payload: tab });
+  }, [tab]);
 
   return {
     state,

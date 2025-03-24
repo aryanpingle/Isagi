@@ -5,25 +5,27 @@ import { CookieTile } from "./components/CookieTile";
 
 const CookieEditorPage = () => {
   const {
-    state: { url },
+    state: { tab },
   } = useCommonManagement();
 
   const [cookies, setCookies] = useState<chrome.cookies.Cookie[]>([]);
 
   useEffect(() => {
-    chrome.cookies.getAll({ url: url }).then((cookies) => {
+    if (!tab) return;
+    chrome.cookies.getAll({ url: tab.url }).then((cookies) => {
       setCookies(cookies);
     });
-  }, [url, setCookies]);
+  }, [tab, setCookies]);
 
   const handleDeleteCookie = useCallback(
     (cookie: chrome.cookies.Cookie) => {
+      if (!tab?.url) return;
       chrome.cookies.remove({
         name: cookie.name,
-        url: url,
+        url: tab.url,
       });
     },
-    [url]
+    [tab]
   );
 
   return (
@@ -33,7 +35,7 @@ const CookieEditorPage = () => {
           display: "flex",
           flexDirection: "column",
           alignItems: "stretch",
-          gap: "0.25em",
+          gap: "0.5em",
         }}
       >
         {cookies.map((cookie) => (

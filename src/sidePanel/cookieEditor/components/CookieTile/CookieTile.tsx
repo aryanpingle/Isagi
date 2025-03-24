@@ -4,6 +4,7 @@ import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import { Button } from "@/components/Button";
 import { CookieTileContent } from "../CookieTileContent";
+import { Box } from "@/components/Box/Box";
 
 export interface CookieTileProps {
   cookie: chrome.cookies.Cookie;
@@ -27,24 +28,31 @@ export const CookieTile = memo(
     }, [onDeleteCookie, cookie]);
 
     return (
-      <div className={styles.cookie_tile}>
+      <Box className={styles.cookie_tile} shadowOffset={4} borderRadius={4}>
         <div
           className={styles["cookie_tile-header"]}
           onClick={toggleIsExpanded}
         >
-          <Button>{ExpandOrCollapseIcon}</Button>
+          <span
+            style={{
+              fontSize: "0.75em",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              opacity: 0.75,
+            }}
+          >
+            {ExpandOrCollapseIcon}
+          </span>
           <div className={styles["cookie_tile-header_info"]}>
-            <span className={styles["cookie_tile-domain"]}>
-              {cookie.domain}
-            </span>
             <span className={styles["cookie_tile-name"]}>{cookie.name}</span>
           </div>
-          <Button onClick={handleDeleteCookie}>
-            <MdDelete color="red" />
+          <Button withShadow disabled onClick={handleDeleteCookie}>
+            Delete
           </Button>
         </div>
         {isExpanded && <CookieTileContent cookie={cookie} />}
-      </div>
+      </Box>
     );
   }
 );

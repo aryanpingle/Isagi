@@ -2,14 +2,16 @@ import { getCurrentWindowActiveTab } from "@/utils/tabs";
 
 type Listener = () => void;
 
-class URLStore {
-  url?: string;
+export type Tab = chrome.tabs.Tab;
+
+class TabStore {
+  tab?: Tab;
   listeners: Listener[] = [];
 
   constructor() {
-    // Set the current URL
+    // Set the current tab
     getCurrentWindowActiveTab().then(([tab]) => {
-      this.updateURL(tab.url);
+      this.updateTab(tab);
     });
 
     // onActivated - when user changes tabs
@@ -17,11 +19,11 @@ class URLStore {
     // Reference: https://stackoverflow.com/a/77277551
     chrome.tabs.onActivated.addListener(async (event) => {
       const tab = await chrome.tabs.get(event.tabId);
-      this.updateURL(tab.url);
+      this.updateTab(tab);
     });
     chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
       if (!tab.active) return;
-      this.updateURL(tab.url);
+      this.updateTab(tab);
     });
   }
 
@@ -33,16 +35,15 @@ class URLStore {
   };
 
   getSnapshot = () => {
-    return this.url;
+    return this.tab;
   };
 
-  updateURL = (url: string) => {
-    this.url = url;
-
+  updateTab = (tab: Tab) => {
+    this.tab = tab;
     for (const listener of this.listeners) {
       listener();
     }
   };
 }
 
-export const URL_STORE = new URLStore();
+export const TAB_STORE = new TabStore();

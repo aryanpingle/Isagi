@@ -2,10 +2,10 @@
   width: 100%;
   display: flex;
   flex-direction: column;
-  border: 0.2em solid black;
+  border: 0.2em solid color;
   border-radius: 0.4em;
 
-  background-color: aquamarine;
+  background-color: hsl(30, 50%, 66%);
 }
 
 .cookie_tile-header {
@@ -25,13 +25,9 @@
   overflow: hidden;
 }
 
-.cookie_tile-domain {
-  font-size: 0.75em;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
 .cookie_tile-name {
   overflow: hidden;
   text-overflow: ellipsis;
+
+  font-weight: 600;
 }
