@@ -1,3 +1,11 @@
-.cookie_tile-content {
+.cookie_tile-form_content,
+.cookie_tile-actions_bar {
+  border-top: 0.1rem solid black;
   padding: 0.5em;
+}
+
+.cookie_tile-actions_bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }

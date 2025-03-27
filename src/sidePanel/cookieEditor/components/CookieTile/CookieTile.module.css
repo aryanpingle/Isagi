@@ -2,10 +2,10 @@
   width: 100%;
   display: flex;
   flex-direction: column;
-  border: 0.2em solid color;
   border-radius: 0.4em;
 
   background-color: hsl(30, 50%, 66%);
+  color: black;
 }
 
 .cookie_tile-header {

@@ -2,13 +2,15 @@ import React from "react";
 import styled from "./Button.module.css";
 import { composeClasses } from "@/utils/utils";
 
-export type ButtonProps = React.PropsWithChildren<{
-  backgroundColor?: string;
-  disabled?: boolean;
-  withShadow?: boolean;
-  variant?: "primary" | "neutral";
-  onClick?: React.DOMAttributes<HTMLButtonElement>["onClick"];
-}>;
+export type ButtonProps = React.PropsWithChildren<
+  React.HTMLAttributes<HTMLButtonElement> & {
+    backgroundColor?: string;
+    disabled?: boolean;
+    withShadow?: boolean;
+    variant?: "primary" | "neutral";
+    onClick?: React.HTMLAttributes<HTMLButtonElement>["onClick"];
+  }
+>;
 
 export const Button = ({
   backgroundColor,
@@ -17,6 +19,8 @@ export const Button = ({
   onClick,
   variant = "neutral",
   withShadow,
+  style,
+  ...otherProps
 }: ButtonProps) => {
   const className = composeClasses([
     styled.button,
@@ -27,15 +31,17 @@ export const Button = ({
     disabled && styled["button--disabled"],
   ]);
 
-  const style = {
+  const mergedStyle = {
     backgroundColor,
+    ...style,
   } as React.CSSProperties;
 
   return (
     <button
       onClick={disabled ? undefined : onClick}
       className={className}
-      style={style}
+      style={mergedStyle}
+      {...otherProps}
     >
       {children}
     </button>

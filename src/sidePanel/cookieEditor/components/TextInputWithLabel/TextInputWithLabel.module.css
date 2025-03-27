@@ -1,0 +1,32 @@
+.text_input_with_label {
+  margin-bottom: 0.5em;
+}
+
+.label {
+  font-weight: 600;
+}
+
+.input_element-container {
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.input_element-container:focus-within {
+  outline: 0.1rem solid white;
+}
+
+.input_element {
+  font: inherit;
+  padding: 0.5em 0.5em;
+  color: inherit;
+  background: inherit;
+  border: none;
+  width: 100%;
+  outline: none !important;
+}
+
+.input_element::placeholder {
+  color: #3c3c3c;
+}

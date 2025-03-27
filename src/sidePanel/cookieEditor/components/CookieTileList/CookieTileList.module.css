@@ -1,0 +1,21 @@
+.cookie_tile_list {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.5em;
+  margin-right: 6px;
+}
+
+.no_cookie_found {
+  color: hsl(30, 50%, 66%);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: 2em;
+  font-weight: 900;
+  text-transform: uppercase;
+  font-style: italic;
+  text-shadow: 2px 2px black;
+}

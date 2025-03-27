@@ -5,6 +5,7 @@ import { MdDelete } from "react-icons/md";
 import { Button } from "@/components/Button";
 import { CookieTileContent } from "../CookieTileContent";
 import { Box } from "@/components/Box/Box";
+import { FaDeleteLeft } from "react-icons/fa6";
 
 export interface CookieTileProps {
   cookie: chrome.cookies.Cookie;
@@ -47,8 +48,12 @@ export const CookieTile = memo(
           <div className={styles["cookie_tile-header_info"]}>
             <span className={styles["cookie_tile-name"]}>{cookie.name}</span>
           </div>
-          <Button withShadow disabled onClick={handleDeleteCookie}>
-            Delete
+          <Button
+            withShadow
+            backgroundColor="red"
+            onClick={handleDeleteCookie}
+          >
+            <MdDelete size="1.5em" color="black" />
           </Button>
         </div>
         {isExpanded && <CookieTileContent cookie={cookie} />}

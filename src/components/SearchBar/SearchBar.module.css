@@ -1,0 +1,25 @@
+.search_bar {
+  display: flex;
+  align-items: center;
+  padding-left: 0.5em;
+}
+
+.search_bar:focus-within {
+  outline-color: white;
+  outline-style: solid;
+  outline-width: 1px;
+}
+
+.search_bar-input {
+  font: inherit;
+  padding: 0.5em 0.5em;
+  background: inherit;
+  color: inherit;
+  border: none;
+  width: 100%;
+  outline: none !important;
+}
+
+.search_bar-input::placeholder {
+  color: #3c3c3c;
+}
