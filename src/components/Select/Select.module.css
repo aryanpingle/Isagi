@@ -1,0 +1,21 @@
+.select_container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-bottom: 0.5em;
+}
+
+.label {
+  font-weight: 600;
+}
+
+.select {
+  width: 100%;
+  font: inherit;
+  border: none;
+  padding: 0.5em;
+}
+
+option {
+  font: inherit;
+}

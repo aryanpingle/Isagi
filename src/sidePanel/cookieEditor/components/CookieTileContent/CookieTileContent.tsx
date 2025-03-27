@@ -4,6 +4,7 @@ import { TextInputWithLabel } from "../TextInputWithLabel";
 import { Button } from "@/components/Button";
 import { useMemo } from "react";
 import { useCommonManagement } from "@/hooks/useCommonManagement";
+import { Select } from "@/components/Select";
 
 export interface CookieTileProps {
   cookie: chrome.cookies.Cookie;
@@ -16,7 +17,32 @@ type CookieFormValues = {
   path: string;
   expirationDate?: string;
   session: boolean;
+  sameSite: chrome.cookies.SameSiteStatus;
 };
+
+type SameSiteOption = {
+  label: React.ReactNode;
+  value: chrome.cookies.Cookie["sameSite"];
+};
+
+const SameSiteOptions: SameSiteOption[] = [
+  {
+    label: "(Unspecified)",
+    value: "unspecified",
+  },
+  {
+    label: "None",
+    value: "no_restriction",
+  },
+  {
+    label: "Lax",
+    value: "lax",
+  },
+  {
+    label: "Strict",
+    value: "strict",
+  },
+];
 
 function cookieToFormValues(cookie: chrome.cookies.Cookie): CookieFormValues {
   return {
@@ -28,6 +54,7 @@ function cookieToFormValues(cookie: chrome.cookies.Cookie): CookieFormValues {
       ? new Date(cookie.expirationDate * 1_000).toString()
       : "",
     session: cookie.session,
+    sameSite: cookie.sameSite,
   };
 }
 
@@ -55,6 +82,7 @@ function formValuesToCookieSetDetails(
     expirationDate: values.session
       ? undefined
       : parseExpirationDateString(values.expirationDate),
+    sameSite: values.sameSite,
   };
 }
 
@@ -96,7 +124,6 @@ export const CookieTileContent = ({ cookie }: CookieTileProps) => {
         <form onSubmit={formik.handleSubmit}>
           {/* Name */}
           <TextInputWithLabel
-            style={{ fontSize: "0.75em" }}
             label="Name:"
             id="cookieName"
             name="cookieName"
@@ -105,7 +132,6 @@ export const CookieTileContent = ({ cookie }: CookieTileProps) => {
           />
           {/* Value */}
           <TextInputWithLabel
-            style={{ fontSize: "0.75em" }}
             label="Value:"
             id="cookieValue"
             name="cookieValue"
@@ -114,7 +140,6 @@ export const CookieTileContent = ({ cookie }: CookieTileProps) => {
           />
           {/* Domain */}
           <TextInputWithLabel
-            style={{ fontSize: "0.75em" }}
             label="Domain:"
             id="cookieDomain"
             name="cookieDomain"
@@ -123,7 +148,6 @@ export const CookieTileContent = ({ cookie }: CookieTileProps) => {
           />
           {/* Path */}
           <TextInputWithLabel
-            style={{ fontSize: "0.75em" }}
             label="Path:"
             id="cookiePath"
             name="cookiePath"
@@ -132,7 +156,6 @@ export const CookieTileContent = ({ cookie }: CookieTileProps) => {
           />
           {/* Expiration Date */}
           <TextInputWithLabel
-            style={{ fontSize: "0.75em" }}
             label="Expiration Date:"
             id="expirationDate"
             name="expirationDate"
@@ -141,9 +164,17 @@ export const CookieTileContent = ({ cookie }: CookieTileProps) => {
             value={formik.values.expirationDate?.toString() ?? ""}
             placeholder="Date string / seconds"
           />
+          <Select
+            // style={{ fontSize: "0.75em" }}
+            id="sameSite"
+            name="sameSite"
+            label="Same Site:"
+            value={formik.values.sameSite}
+            onChange={formik.handleChange}
+            options={SameSiteOptions}
+          />
           <div>Host Only: {cookie.hostOnly}</div>
           <div>HTTP Only: {cookie.httpOnly}</div>
-          <div>Same Site: {cookie.sameSite}</div>
         </form>
       </div>
       <div className={styles["cookie_tile-actions_bar"]}>
