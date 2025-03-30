@@ -5,20 +5,7 @@ import { Button } from "@/components/Button";
 import { useMemo } from "react";
 import { useCommonManagement } from "@/hooks/useCommonManagement";
 import { Select } from "@/components/Select";
-
-export interface CookieTileProps {
-  cookie: chrome.cookies.Cookie;
-}
-
-type CookieFormValues = {
-  cookieName: string;
-  cookieValue: string;
-  domain: string;
-  path: string;
-  expirationDate?: string;
-  session: boolean;
-  sameSite: chrome.cookies.SameSiteStatus;
-};
+import { Checkbox } from "@/components/Checkbox";
 
 type SameSiteOption = {
   label: React.ReactNode;
@@ -44,17 +31,37 @@ const SameSiteOptions: SameSiteOption[] = [
   },
 ];
 
+export interface CookieTileProps {
+  cookie: chrome.cookies.Cookie;
+}
+
+type CookieFormValues = {
+  cookieName: string;
+  cookieValue: string;
+  cookieDomain: string;
+  cookiePath: string;
+  expirationDate?: string;
+  secure: boolean;
+  session: boolean;
+  sameSite: chrome.cookies.SameSiteStatus;
+  hostOnly: boolean;
+  httpOnly: boolean;
+};
+
 function cookieToFormValues(cookie: chrome.cookies.Cookie): CookieFormValues {
   return {
     cookieName: cookie.name,
     cookieValue: cookie.value,
-    domain: cookie.domain,
-    path: cookie.path,
+    cookieDomain: cookie.domain,
     expirationDate: cookie.expirationDate
       ? new Date(cookie.expirationDate * 1_000).toString()
       : "",
-    session: cookie.session,
+    hostOnly: cookie.hostOnly,
+    httpOnly: cookie.httpOnly,
+    cookiePath: cookie.path,
     sameSite: cookie.sameSite,
+    secure: cookie.secure,
+    session: cookie.session,
   };
 }
 
@@ -77,12 +84,14 @@ function formValuesToCookieSetDetails(
   return {
     name: values.cookieName,
     value: values.cookieValue,
-    domain: values.domain,
-    path: values.path,
+    domain: values.cookieDomain,
+    httpOnly: values.httpOnly,
+    path: values.cookiePath,
     expirationDate: values.session
       ? undefined
       : parseExpirationDateString(values.expirationDate),
     sameSite: values.sameSite,
+    secure: values.secure,
   };
 }
 
@@ -112,7 +121,7 @@ export const CookieTileContent = ({ cookie }: CookieTileProps) => {
         url: tab.url,
       };
 
-      console.log("Setting these details:", manualSetDetails);
+      console.log("Setting these details:", detailsToBeSet);
 
       // chrome.cookies.set(detailsToBeSet);
     },
@@ -143,8 +152,17 @@ export const CookieTileContent = ({ cookie }: CookieTileProps) => {
             label="Domain:"
             id="cookieDomain"
             name="cookieDomain"
+            disabled={formik.values.hostOnly}
             onChange={formik.handleChange}
-            value={formik.values.domain}
+            value={formik.values.cookieDomain}
+          />
+          {/* Host Only */}
+          <Checkbox
+            label="Host Only"
+            id="hostOnly"
+            name="hostOnly"
+            checked={formik.values.hostOnly}
+            onChange={formik.handleChange}
           />
           {/* Path */}
           <TextInputWithLabel
@@ -152,7 +170,7 @@ export const CookieTileContent = ({ cookie }: CookieTileProps) => {
             id="cookiePath"
             name="cookiePath"
             onChange={formik.handleChange}
-            value={formik.values.path}
+            value={formik.values.cookiePath}
           />
           {/* Expiration Date */}
           <TextInputWithLabel
@@ -160,12 +178,20 @@ export const CookieTileContent = ({ cookie }: CookieTileProps) => {
             id="expirationDate"
             name="expirationDate"
             onChange={formik.handleChange}
-            disabled={cookie.session}
+            disabled={formik.values.session}
             value={formik.values.expirationDate?.toString() ?? ""}
             placeholder="Date string / seconds"
           />
+          {/* Session */}
+          <Checkbox
+            label="Session Only"
+            id="session"
+            name="session"
+            checked={formik.values.session}
+            onChange={formik.handleChange}
+          />
+          {/* Same site */}
           <Select
-            // style={{ fontSize: "0.75em" }}
             id="sameSite"
             name="sameSite"
             label="Same Site:"
@@ -173,8 +199,22 @@ export const CookieTileContent = ({ cookie }: CookieTileProps) => {
             onChange={formik.handleChange}
             options={SameSiteOptions}
           />
-          <div>Host Only: {cookie.hostOnly}</div>
-          <div>HTTP Only: {cookie.httpOnly}</div>
+          {/* Secure */}
+          <Checkbox
+            label="Secure"
+            id="secure"
+            name="secure"
+            checked={formik.values.secure}
+            onChange={formik.handleChange}
+          />
+          {/* HTTP Only */}
+          <Checkbox
+            label="HTTP Only"
+            id="httpOnly"
+            name="httpOnly"
+            checked={formik.values.httpOnly}
+            onChange={formik.handleChange}
+          />
         </form>
       </div>
       <div className={styles["cookie_tile-actions_bar"]}>

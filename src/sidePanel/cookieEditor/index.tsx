@@ -2,7 +2,6 @@ import styles from "./index.module.css";
 import { useCommonManagement } from "@/hooks/useCommonManagement";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { createRoot } from "react-dom/client";
-import { CookieTile } from "./components/CookieTile";
 import { SearchBar } from "@/components/SearchBar";
 import { CookieTileList } from "./components/CookieTileList";
 import { Button } from "@/components/Button";

@@ -30,3 +30,7 @@
 .input_element::placeholder {
   color: #3c3c3c;
 }
+
+.input_element:disabled {
+  background: #c6c6c6 !important;
+}
