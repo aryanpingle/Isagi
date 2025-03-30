@@ -1,25 +1,33 @@
-import js from "@eslint/js";
+import { defineConfig } from "eslint/config";
 import globals from "globals";
-import reactHooks from "eslint-plugin-react-hooks";
-import reactRefresh from "eslint-plugin-react-refresh";
+import js from "@eslint/js";
 import tseslint from "typescript-eslint";
+import pluginReact from "eslint-plugin-react";
+import pluginReactHooks from "eslint-plugin-react-hooks";
 
-export default tseslint.config(
-  { ignores: ["dist"] },
+export default defineConfig([
+  { files: ["**/*.{js,mjs,cjs,ts,jsx,tsx}"] },
   {
-    extends: [js.configs.recommended, ...tseslint.configs.recommended],
-    files: ["**/*.{ts,tsx}"],
-    languageOptions: {
-      ecmaVersion: 2020,
-      globals: globals.browser,
-    },
-    plugins: {
-      "react-hooks": reactHooks,
-      "react-refresh": reactRefresh,
-    },
+    files: ["**/*.{js,mjs,cjs,ts,jsx,tsx}"],
+    languageOptions: { globals: globals.browser },
+  },
+  {
+    files: ["**/*.{js,mjs,cjs,ts,jsx,tsx}"],
+    plugins: { js },
+    extends: ["js/recommended"],
+  },
+  tseslint.configs.recommended,
+  pluginReact.configs.flat.recommended,
+  pluginReactHooks.configs["recommended-latest"],
+  {
     rules: {
-      ...reactHooks.configs.recommended.rules,
-      "react-refresh/only-export-components": ["off"],
+      "@typescript-eslint/no-explicit-any": "off",
+      "react/prop-types": "off",
+      // suppress errors for missing 'import React' in files
+      "react/react-in-jsx-scope": "off",
     },
-  }
-);
+  },
+  {
+    ignores: ["node_modules", "dist"],
+  },
+]);

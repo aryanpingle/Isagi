@@ -1,6 +1,6 @@
 import { Box } from "@/components/Box/Box";
 import styles from "./TextInputWithLabel.module.css";
-import React, { useEffect, useRef, useState } from "react";
+import React from "react";
 
 type InputAttributes = React.InputHTMLAttributes<HTMLInputElement>;
 
@@ -14,7 +14,6 @@ export type TextInputWithLabelProps = InputAttributes & {
 export const TextInputWithLabel = ({
   label,
   error,
-  style,
   ...inputProps
 }: TextInputWithLabelProps) => {
   return (
@@ -23,11 +22,7 @@ export const TextInputWithLabel = ({
         {label}
       </label>
       <Box className={styles["input_element-container"]}>
-        <input
-          className={styles.input_element}
-          type="text"
-          {...inputProps}
-        />
+        <input className={styles.input_element} type="text" {...inputProps} />
       </Box>
       {error && <span color="red">{error}</span>}
     </div>

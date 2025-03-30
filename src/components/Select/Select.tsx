@@ -18,7 +18,9 @@ export const Select = ({ label, options, ...selectProps }: SelectProps) => {
       <Box>
         <select className={styles.select} {...selectProps}>
           {options.map((option) => (
-            <option value={option.value}>{option.label}</option>
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
           ))}
         </select>
       </Box>

@@ -61,8 +61,8 @@ const CookieEditorPage = () => {
       <h2 className={styles["cookie_editor_page-header"]}>Cookie Editor</h2>
       <div className={styles["cookie_editor_page-query_section"]}>
         <SearchBar
+          backgroundColor="#7DD4A8"
           shadowOffset={2}
-          style={{ backgroundColor: "#7DD4A8" }}
           onQuery={handleQuery}
         />
         <Button

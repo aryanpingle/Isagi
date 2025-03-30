@@ -2,6 +2,7 @@ import { toCSSMeasurement } from "@/utils/utils";
 import React from "react";
 
 export type BoxProps = React.HTMLAttributes<HTMLSpanElement> & {
+  backgroundColor?: string;
   borderColor?: string;
   borderRadius?: number | string;
   ref?: React.Ref<HTMLSpanElement>;
@@ -12,8 +13,8 @@ export type BoxProps = React.HTMLAttributes<HTMLSpanElement> & {
 };
 
 export const Box = ({
+  backgroundColor,
   children,
-  borderColor = "black",
   borderRadius: _borderRadius,
   ref,
   shadowColor = "black",
@@ -29,9 +30,12 @@ export const Box = ({
   const boxShadowColor = shadowColor ?? "black";
 
   const mergedStyle: React.CSSProperties = {
-    border: `0.1rem solid ${boxShadowColor}`,
-    borderRadius: borderRadius,
-    boxShadow: `${boxShadowX} ${boxShadowY} 0 ${boxShadowColor}`,
+    ...{
+      backgroundColor: backgroundColor,
+      border: `0.1rem solid ${boxShadowColor}`,
+      borderRadius: borderRadius,
+      boxShadow: `${boxShadowX} ${boxShadowY} 0 ${boxShadowColor}`,
+    },
     ...style,
   };
 

@@ -7,6 +7,10 @@ export type CookieTileListProps = {
   onDeleteCookie: (cookie: chrome.cookies.Cookie) => void;
 };
 
+function getCookieKey(cookie: chrome.cookies.Cookie): React.Key {
+  return JSON.stringify(cookie);
+}
+
 export const CookieTileList = ({
   cookies,
   onDeleteCookie,
@@ -14,7 +18,11 @@ export const CookieTileList = ({
   return cookies.length ? (
     <div className={styles.cookie_tile_list}>
       {cookies.map((cookie) => (
-        <CookieTile cookie={cookie} onDeleteCookie={onDeleteCookie} />
+        <CookieTile
+          key={getCookieKey(cookie)}
+          cookie={cookie}
+          onDeleteCookie={onDeleteCookie}
+        />
       ))}
     </div>
   ) : (
