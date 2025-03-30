@@ -34,3 +34,10 @@
 .input_element:disabled {
   background: #c6c6c6 !important;
 }
+
+.error {
+  border: 0.1rem solid black;
+  border-top: none;
+  padding: 0.5ch;
+  background-color: red;
+}

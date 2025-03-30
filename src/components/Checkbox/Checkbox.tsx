@@ -1,3 +1,4 @@
+import { useId, useMemo } from "react";
 import styles from "./Checkbox.module.css";
 
 export type CheckboxProps = React.InputHTMLAttributes<HTMLInputElement> & {
@@ -5,12 +6,16 @@ export type CheckboxProps = React.InputHTMLAttributes<HTMLInputElement> & {
 };
 
 export const Checkbox = ({ label, ...inputProps }: CheckboxProps) => {
+  const id = useId();
+  const inputId = useMemo(() => `checkbox-${id}`, [id]);
+
   return (
-    <label htmlFor={inputProps.name} className={styles.checkbox_label}>
+    <label htmlFor={inputId} className={styles.checkbox_label}>
       <input
         type="checkbox"
         className={styles.checkbox_input}
         {...inputProps}
+        id={inputId}
       />
       {label}
     </label>

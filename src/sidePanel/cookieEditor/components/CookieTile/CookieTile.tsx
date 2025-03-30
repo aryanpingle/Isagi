@@ -56,7 +56,7 @@ const CookieTileUnmemoized = ({ cookie, onDeleteCookie }: CookieTileProps) => {
         <div className={styles["cookie_tile-header_info"]}>
           <span className={styles["cookie_tile-name"]}>{cookie.name}</span>
         </div>
-        <Button withShadow backgroundColor="red" onClick={handleDeleteCookie}>
+        <Button withShadow backgroundColor="hsl(0, 75%, 50%)" onClick={handleDeleteCookie}>
           <MdDelete size="1.5em" color="black" />
         </Button>
       </div>

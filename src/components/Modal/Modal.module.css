@@ -1,0 +1,49 @@
+.dialog {
+  width: 100%;
+  height: 100%;
+  background: none;
+  border: none;
+  padding: 0;
+}
+
+.dialog-inner {
+  background-color: rgba(0, 0, 0, 0.75);
+
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.5em;
+}
+
+.modal {
+  width: 100%;
+  background-color: white;
+  border-radius: 4px;
+  border: 0.1rem solid black;
+  box-shadow: 4px 4px 0 black;
+}
+
+.modal_header {
+  padding: 0.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 800;
+}
+
+.modal_title {
+  font-size: 1.5em;
+  margin-right: 0.5rem;
+}
+
+.modal_contents {
+  border-top: 0.1rem solid black;
+  padding: 0.5rem;
+}
+
+.modal_actions_bar {
+  border-top: 0.1rem solid black;
+  padding: 0.5rem;
+}

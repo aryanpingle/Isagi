@@ -9,7 +9,7 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: stretch;
-  gap: 0.5em;
+  gap: 0.5rem;
 }
 
 .cookie_editor_page-header {

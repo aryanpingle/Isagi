@@ -24,7 +24,7 @@ export const TextInputWithLabel = ({
       <Box className={styles["input_element-container"]}>
         <input className={styles.input_element} type="text" {...inputProps} />
       </Box>
-      {error && <span color="red">{error}</span>}
+      {error && <div className={styles.error}>{error}</div>}
     </div>
   );
 };

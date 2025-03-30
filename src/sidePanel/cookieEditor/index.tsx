@@ -6,11 +6,15 @@ import { SearchBar } from "@/components/SearchBar";
 import { CookieTileList } from "./components/CookieTileList";
 import { Button } from "@/components/Button";
 import { MdOutlineRefresh } from "react-icons/md";
+import { useModal } from "@/components/Modal";
+import { AddCookieButton } from "./components/AddCookieButton";
 
 const CookieEditorPage = () => {
   const {
     state: { tab },
   } = useCommonManagement();
+
+  const { modalNode, setIsModalOpen, setModalDetails } = useModal();
 
   const [cookies, setCookies] = useState<chrome.cookies.Cookie[]>([]);
   const [query, setQuery] = useState<string>("");
@@ -84,6 +88,15 @@ const CookieEditorPage = () => {
           onDeleteCookie={handleDeleteCookie}
         />
       </div>
+      <div>
+        <AddCookieButton
+          withShadow
+          backgroundColor="#7DD4A8"
+          setIsModalOpen={setIsModalOpen}
+          setModalDetails={setModalDetails}
+        />
+      </div>
+      {modalNode}
     </div>
   );
 };

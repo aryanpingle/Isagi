@@ -1,4 +1,4 @@
-import { useFormik } from "formik";
+import { FormikErrors, useFormik } from "formik";
 import styles from "./CookieTileContent.module.css";
 import { TextInputWithLabel } from "../TextInputWithLabel";
 import { Button } from "@/components/Button";
@@ -40,12 +40,14 @@ type CookieFormValues = {
   cookieValue: string;
   cookieDomain: string;
   cookiePath: string;
-  expirationDate?: string;
+  expirationDate: string;
   secure: boolean;
   session: boolean;
   sameSite: chrome.cookies.SameSiteStatus;
   hostOnly: boolean;
   httpOnly: boolean;
+  storeId: string;
+  partitionKey?: chrome.cookies.CookiePartitionKey;
 };
 
 function cookieToFormValues(cookie: chrome.cookies.Cookie): CookieFormValues {
@@ -62,6 +64,8 @@ function cookieToFormValues(cookie: chrome.cookies.Cookie): CookieFormValues {
     sameSite: cookie.sameSite,
     secure: cookie.secure,
     session: cookie.session,
+    storeId: cookie.storeId,
+    partitionKey: cookie.partitionKey,
   };
 }
 
@@ -78,13 +82,27 @@ function parseExpirationDateString(input?: string): number | undefined {
   return undefined;
 }
 
+function validateDateString(input: string): boolean {
+  // Check if the input is also a valid number
+  if (!isNaN(parseFloat(input))) {
+    return true;
+  }
+
+  // Check if the input is a valid Date string
+  const seconds = Date.parse(input);
+  if (!isNaN(seconds)) return true;
+
+  return false;
+}
+
 function formValuesToCookieSetDetails(
   values: CookieFormValues
 ): Partial<chrome.cookies.SetDetails> {
   return {
     name: values.cookieName,
     value: values.cookieValue,
-    domain: values.cookieDomain,
+    // If domain is an empty string or undefined, set it to undefined
+    domain: values.cookieDomain || undefined,
     httpOnly: values.httpOnly,
     path: values.cookiePath,
     expirationDate: values.session
@@ -92,6 +110,8 @@ function formValuesToCookieSetDetails(
       : parseExpirationDateString(values.expirationDate),
     sameSite: values.sameSite,
     secure: values.secure,
+    storeId: values.storeId,
+    partitionKey: values.partitionKey,
   };
 }
 
@@ -104,26 +124,27 @@ export const CookieTileContent = ({ cookie }: CookieTileProps) => {
 
   const formik = useFormik({
     initialValues: initialFormValues,
-    validate: (values) => {
-      console.log("validating", values);
+    validate: (values): FormikErrors<CookieFormValues> => {
+      const errors: FormikErrors<CookieFormValues> = {};
+
+      // Validate expiration date
+      if (!values.session && !validateDateString(values.expirationDate)) {
+        errors.expirationDate = "Must be a valid date string or timestamp.";
+      }
+
+      return errors;
     },
     onSubmit: (values) => {
       if (!tab?.url) return;
 
-      const initiallySetDetails =
-        formValuesToCookieSetDetails(initialFormValues);
       const manualSetDetails = formValuesToCookieSetDetails(values);
 
-      // TODO: Stuff like domain should be undefined if empty
       const detailsToBeSet: chrome.cookies.SetDetails = {
-        ...initiallySetDetails,
         ...manualSetDetails,
         url: tab.url,
       };
 
-      console.log("Setting these details:", detailsToBeSet);
-
-      // chrome.cookies.set(detailsToBeSet);
+      chrome.cookies.set(detailsToBeSet);
     },
   });
 
@@ -134,32 +155,34 @@ export const CookieTileContent = ({ cookie }: CookieTileProps) => {
           {/* Name */}
           <TextInputWithLabel
             label="Name:"
-            id="cookieName"
             name="cookieName"
+            placeholder="Cookie name"
             onChange={formik.handleChange}
             value={formik.values.cookieName}
+            error={formik.errors.cookieName}
           />
           {/* Value */}
           <TextInputWithLabel
             label="Value:"
-            id="cookieValue"
             name="cookieValue"
+            placeholder="Cookie value"
             onChange={formik.handleChange}
             value={formik.values.cookieValue}
+            error={formik.errors.cookieValue}
           />
           {/* Domain */}
           <TextInputWithLabel
             label="Domain:"
-            id="cookieDomain"
             name="cookieDomain"
+            placeholder="Cookie domain"
             disabled={formik.values.hostOnly}
             onChange={formik.handleChange}
             value={formik.values.cookieDomain}
+            error={formik.errors.cookieDomain}
           />
           {/* Host Only */}
           <Checkbox
             label="Host Only"
-            id="hostOnly"
             name="hostOnly"
             checked={formik.values.hostOnly}
             onChange={formik.handleChange}
@@ -167,32 +190,39 @@ export const CookieTileContent = ({ cookie }: CookieTileProps) => {
           {/* Path */}
           <TextInputWithLabel
             label="Path:"
-            id="cookiePath"
             name="cookiePath"
+            placeholder="Cookie path"
             onChange={formik.handleChange}
             value={formik.values.cookiePath}
+            error={formik.errors.cookiePath}
           />
           {/* Expiration Date */}
           <TextInputWithLabel
             label="Expiration Date:"
-            id="expirationDate"
             name="expirationDate"
+            placeholder="Date string / seconds"
             onChange={formik.handleChange}
             disabled={formik.values.session}
             value={formik.values.expirationDate?.toString() ?? ""}
-            placeholder="Date string / seconds"
+            error={formik.errors.expirationDate}
           />
           {/* Session */}
           <Checkbox
             label="Session Only"
-            id="session"
             name="session"
             checked={formik.values.session}
             onChange={formik.handleChange}
           />
+          {/* Store ID */}
+          {/* <TextInputWithLabel
+            label="Store ID:"
+            name="storeId"
+            placeholder="Cookie store ID"
+            onChange={formik.handleChange}
+            value={formik.values.storeId}
+          /> */}
           {/* Same site */}
           <Select
-            id="sameSite"
             name="sameSite"
             label="Same Site:"
             value={formik.values.sameSite}
@@ -202,7 +232,6 @@ export const CookieTileContent = ({ cookie }: CookieTileProps) => {
           {/* Secure */}
           <Checkbox
             label="Secure"
-            id="secure"
             name="secure"
             checked={formik.values.secure}
             onChange={formik.handleChange}
@@ -210,7 +239,6 @@ export const CookieTileContent = ({ cookie }: CookieTileProps) => {
           {/* HTTP Only */}
           <Checkbox
             label="HTTP Only"
-            id="httpOnly"
             name="httpOnly"
             checked={formik.values.httpOnly}
             onChange={formik.handleChange}
