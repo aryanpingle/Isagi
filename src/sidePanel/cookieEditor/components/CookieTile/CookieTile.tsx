@@ -1,5 +1,5 @@
 import styles from "./CookieTile.module.css";
-import { memo, useCallback, useMemo, useState } from "react";
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import { Button } from "@/components/Button";
@@ -14,11 +14,19 @@ export interface CookieTileProps {
 
 export const CookieTile = memo(
   ({ cookie, onDeleteCookie }: CookieTileProps) => {
+    const tileRef = useRef<HTMLSpanElement>(null);
+
     const [isExpanded, setIsExpanded] = useState(false);
 
     const toggleIsExpanded = useCallback(() => {
       setIsExpanded((prev) => !prev);
     }, [setIsExpanded]);
+
+    useEffect(() => {
+      if(isExpanded === true) {
+        tileRef.current?.scrollIntoView({ behavior: "smooth" })
+      }
+    }, [isExpanded])
 
     const ExpandOrCollapseIcon = useMemo(() => {
       return isExpanded ? <FaChevronUp /> : <FaChevronDown />;
@@ -29,7 +37,12 @@ export const CookieTile = memo(
     }, [onDeleteCookie, cookie]);
 
     return (
-      <Box className={styles.cookie_tile} shadowOffset={4} borderRadius={4}>
+      <Box
+        ref={tileRef}
+        className={styles.cookie_tile}
+        shadowOffset={4}
+        borderRadius={4}
+      >
         <div
           className={styles["cookie_tile-header"]}
           onClick={toggleIsExpanded}
@@ -48,11 +61,7 @@ export const CookieTile = memo(
           <div className={styles["cookie_tile-header_info"]}>
             <span className={styles["cookie_tile-name"]}>{cookie.name}</span>
           </div>
-          <Button
-            withShadow
-            backgroundColor="red"
-            onClick={handleDeleteCookie}
-          >
+          <Button withShadow backgroundColor="red" onClick={handleDeleteCookie}>
             <MdDelete size="1.5em" color="black" />
           </Button>
         </div>

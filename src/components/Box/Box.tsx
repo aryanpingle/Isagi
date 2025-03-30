@@ -4,6 +4,7 @@ import React from "react";
 export type BoxProps = React.HTMLAttributes<HTMLSpanElement> & {
   borderColor?: string;
   borderRadius?: number | string;
+  ref?: React.Ref<HTMLSpanElement>;
   shadowColor?: string;
   shadowX?: number | string;
   shadowY?: number | string;
@@ -14,6 +15,7 @@ export const Box = ({
   children,
   borderColor = "black",
   borderRadius: _borderRadius,
+  ref,
   shadowColor = "black",
   shadowOffset,
   shadowX,
@@ -34,7 +36,7 @@ export const Box = ({
   };
 
   return (
-    <span {...spanProps} style={mergedStyle}>
+    <span ref={ref} {...spanProps} style={mergedStyle}>
       {children}
     </span>
   );
