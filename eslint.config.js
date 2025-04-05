@@ -21,6 +21,7 @@ export default defineConfig([
   pluginReactHooks.configs["recommended-latest"],
   {
     rules: {
+      "@typescript-eslint/no-unused-vars": "warn",
       "@typescript-eslint/no-explicit-any": "off",
       "react/prop-types": "off",
       // suppress errors for missing 'import React' in files

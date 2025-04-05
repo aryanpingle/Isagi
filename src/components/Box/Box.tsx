@@ -35,6 +35,7 @@ export const Box = ({
       border: `0.1rem solid ${boxShadowColor}`,
       borderRadius: borderRadius,
       boxShadow: `${boxShadowX} ${boxShadowY} 0 ${boxShadowColor}`,
+      marginBottom: "4px",
     },
     ...style,
   };

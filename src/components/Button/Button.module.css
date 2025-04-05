@@ -19,6 +19,7 @@
 
 .button--with_shadow {
   box-shadow: 2px 2px 0 black;
+  margin-right: 4px;
 }
 
 .button--with_shadow:not(.button--disabled):hover {

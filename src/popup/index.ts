@@ -7,7 +7,8 @@ async function openSidePanel() {
   });
   // Use the current tab id to open the side-panel
   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-  chrome.sidePanel.open({ windowId: tab.windowId });
+  await chrome.sidePanel.open({ windowId: tab.windowId });
+  window.close();
 }
 
 document.addEventListener("DOMContentLoaded", () => {

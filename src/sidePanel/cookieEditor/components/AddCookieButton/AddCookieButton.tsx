@@ -3,13 +3,15 @@ import { ModalDetails } from "@/components/Modal";
 import { useCallback } from "react";
 import { FaPlus } from "react-icons/fa";
 import { CookieTileContent } from "../CookieTileContent";
+import { ChromeCookie, getCookieKey } from "@/utils/cookie";
 
 export type AddCookieButtonProps = ButtonProps & {
   setModalDetails: (details: ModalDetails) => void;
   setIsModalOpen: (value: boolean) => void;
+  onCookieAdded?: (cookie: ChromeCookie) => void;
 };
 
-const emptyCookie: chrome.cookies.Cookie = {
+const emptyCookie: ChromeCookie = {
   name: "",
   domain: "",
   hostOnly: false,
@@ -23,14 +25,29 @@ const emptyCookie: chrome.cookies.Cookie = {
 };
 
 export const AddCookieButton = ({
+  onCookieAdded,
   setIsModalOpen,
   setModalDetails,
   ...buttonProps
 }: AddCookieButtonProps) => {
+  const handleCookieSaved = useCallback(
+    (cookie: ChromeCookie) => {
+      setIsModalOpen(false);
+      onCookieAdded?.(cookie);
+    },
+    [onCookieAdded, setIsModalOpen]
+  );
+
   const openAddCookieModal = useCallback(() => {
     setModalDetails({
       title: "Add Cookie",
-      contents: <CookieTileContent cookie={emptyCookie} />,
+      contents: (
+        <CookieTileContent
+          key={getCookieKey(emptyCookie)}
+          cookie={emptyCookie}
+          onCookieSaved={handleCookieSaved}
+        />
+      ),
       modalElementProps: {
         style: {
           backgroundColor: "hsl(30, 50%, 66%)",
@@ -44,7 +61,7 @@ export const AddCookieButton = ({
       },
     });
     setIsModalOpen(true);
-  }, [setIsModalOpen, setModalDetails]);
+  }, [handleCookieSaved, setIsModalOpen, setModalDetails]);
 
   return (
     <Button {...buttonProps} onClick={openAddCookieModal}>

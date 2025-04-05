@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import styled from "./Button.module.css";
 import { composeClasses } from "@/utils/utils";
 
@@ -31,10 +31,14 @@ export const Button = ({
     disabled && styled["button--disabled"],
   ]);
 
-  const mergedStyle = {
-    backgroundColor,
-    ...style,
-  } as React.CSSProperties;
+  const mergedStyle = useMemo(
+    () =>
+      ({
+        backgroundColor,
+        ...style,
+      } as React.CSSProperties),
+    [backgroundColor, style]
+  );
 
   return (
     <button

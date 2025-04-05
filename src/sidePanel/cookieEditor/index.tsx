@@ -8,6 +8,7 @@ import { Button } from "@/components/Button";
 import { MdOutlineRefresh } from "react-icons/md";
 import { useModal } from "@/components/Modal";
 import { AddCookieButton } from "./components/AddCookieButton";
+import { ChromeCookie } from "@/utils/cookie";
 
 const CookieEditorPage = () => {
   const {
@@ -16,7 +17,7 @@ const CookieEditorPage = () => {
 
   const { modalNode, setIsModalOpen, setModalDetails } = useModal();
 
-  const [cookies, setCookies] = useState<chrome.cookies.Cookie[]>([]);
+  const [cookies, setCookies] = useState<ChromeCookie[]>([]);
   const [query, setQuery] = useState<string>("");
 
   useEffect(() => {
@@ -26,16 +27,22 @@ const CookieEditorPage = () => {
     });
   }, [tab]);
 
-  const handleDeleteCookie = useCallback(
-    (cookie: chrome.cookies.Cookie) => {
-      if (!tab?.url) return;
-      chrome.cookies.remove({
-        name: cookie.name,
-        url: tab.url,
-      });
-    },
-    [tab]
-  );
+  const handleCookieAdded = useCallback((cookie: ChromeCookie) => {
+    // Add this cookie to the (local) cookies list
+    setCookies((cookies) => {
+      return [...cookies, cookie];
+    });
+  }, []);
+
+  const handleCookieDeleted = useCallback((deletedCookie: ChromeCookie) => {
+    const deletedCookieStringified = JSON.stringify(deletedCookie);
+    // Remove this cookie from the (local) cookies list
+    setCookies((cookies) => {
+      return cookies.filter(
+        (cookie) => JSON.stringify(cookie) !== deletedCookieStringified
+      );
+    });
+  }, []);
 
   const handleQuery = useCallback(
     (query: string) => {
@@ -44,7 +51,7 @@ const CookieEditorPage = () => {
     [setQuery]
   );
 
-  const displayedCookies: chrome.cookies.Cookie[] = useMemo(() => {
+  const displayedCookies: ChromeCookie[] = useMemo(() => {
     const queryLowerCase = query.toLowerCase();
     return cookies
       .filter((c) => {
@@ -68,6 +75,7 @@ const CookieEditorPage = () => {
           backgroundColor="#7DD4A8"
           shadowOffset={2}
           onQuery={handleQuery}
+          style={{ height: "100%", marginTop: 0 }}
         />
         <Button
           withShadow
@@ -77,6 +85,7 @@ const CookieEditorPage = () => {
           style={{
             aspectRatio: "1 / 1",
             height: "100%",
+            marginBottom: "4px",
           }}
         >
           <MdOutlineRefresh size="2em" />
@@ -85,7 +94,7 @@ const CookieEditorPage = () => {
       <div className={styles.cookie_tile_list_container}>
         <CookieTileList
           cookies={displayedCookies}
-          onDeleteCookie={handleDeleteCookie}
+          onCookieDeleted={handleCookieDeleted}
         />
       </div>
       <div>
@@ -94,6 +103,7 @@ const CookieEditorPage = () => {
           backgroundColor="#7DD4A8"
           setIsModalOpen={setIsModalOpen}
           setModalDetails={setModalDetails}
+          onCookieAdded={handleCookieAdded}
         />
       </div>
       {modalNode}

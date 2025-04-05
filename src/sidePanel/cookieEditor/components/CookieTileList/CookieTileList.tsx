@@ -1,19 +1,16 @@
 import { FaCookieBite } from "react-icons/fa";
 import { CookieTile } from "../CookieTile/CookieTile";
 import styles from "./CookieTileList.module.css";
+import { ChromeCookie, getCookieKey } from "@/utils/cookie";
 
 export type CookieTileListProps = {
-  cookies: chrome.cookies.Cookie[];
-  onDeleteCookie: (cookie: chrome.cookies.Cookie) => void;
+  cookies: ChromeCookie[];
+  onCookieDeleted?: (cookie: ChromeCookie) => void;
 };
-
-function getCookieKey(cookie: chrome.cookies.Cookie): React.Key {
-  return JSON.stringify(cookie);
-}
 
 export const CookieTileList = ({
   cookies,
-  onDeleteCookie,
+  onCookieDeleted,
 }: CookieTileListProps) => {
   return cookies.length ? (
     <div className={styles.cookie_tile_list}>
@@ -21,7 +18,7 @@ export const CookieTileList = ({
         <CookieTile
           key={getCookieKey(cookie)}
           cookie={cookie}
-          onDeleteCookie={onDeleteCookie}
+          onCookieDeleted={onCookieDeleted}
         />
       ))}
     </div>

@@ -28,6 +28,7 @@
 
 .cookie_tile-name {
   overflow: hidden;
+  white-space: nowrap;
   text-overflow: ellipsis;
 
   font-weight: 600;

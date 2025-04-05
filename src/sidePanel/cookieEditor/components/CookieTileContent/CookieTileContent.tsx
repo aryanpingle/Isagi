@@ -6,10 +6,11 @@ import { useMemo } from "react";
 import { useCommonManagement } from "@/hooks/useCommonManagement";
 import { Select } from "@/components/Select";
 import { Checkbox } from "@/components/Checkbox";
+import { ChromeCookie } from "@/utils/cookie";
 
 type SameSiteOption = {
   label: React.ReactNode;
-  value: chrome.cookies.Cookie["sameSite"];
+  value: ChromeCookie["sameSite"];
 };
 
 const SameSiteOptions: SameSiteOption[] = [
@@ -32,7 +33,8 @@ const SameSiteOptions: SameSiteOption[] = [
 ];
 
 export interface CookieTileProps {
-  cookie: chrome.cookies.Cookie;
+  cookie: ChromeCookie;
+  onCookieSaved?: (cookie: ChromeCookie) => void;
 }
 
 type CookieFormValues = {
@@ -50,7 +52,7 @@ type CookieFormValues = {
   partitionKey?: chrome.cookies.CookiePartitionKey;
 };
 
-function cookieToFormValues(cookie: chrome.cookies.Cookie): CookieFormValues {
+function cookieToFormValues(cookie: ChromeCookie): CookieFormValues {
   return {
     cookieName: cookie.name,
     cookieValue: cookie.value,
@@ -115,7 +117,10 @@ function formValuesToCookieSetDetails(
   };
 }
 
-export const CookieTileContent = ({ cookie }: CookieTileProps) => {
+export const CookieTileContent = ({
+  cookie,
+  onCookieSaved,
+}: CookieTileProps) => {
   const {
     state: { tab },
   } = useCommonManagement();
@@ -134,7 +139,7 @@ export const CookieTileContent = ({ cookie }: CookieTileProps) => {
 
       return errors;
     },
-    onSubmit: (values) => {
+    onSubmit: async (values) => {
       if (!tab?.url) return;
 
       const manualSetDetails = formValuesToCookieSetDetails(values);
@@ -144,7 +149,19 @@ export const CookieTileContent = ({ cookie }: CookieTileProps) => {
         url: tab.url,
       };
 
-      chrome.cookies.set(detailsToBeSet);
+      // If the change includes a renaming, remove the original cookie
+      if (values.cookieName !== cookie.name) {
+        await chrome.cookies.remove({
+          name: cookie.name,
+          url: tab.url,
+        });
+      }
+      const savedCookie = await chrome.cookies.set(detailsToBeSet);
+      if (savedCookie === null) {
+        // Something went wrong
+        return;
+      }
+      onCookieSaved?.(savedCookie);
     },
   });
 
