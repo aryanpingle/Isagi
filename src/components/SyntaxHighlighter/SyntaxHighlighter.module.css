@@ -1,0 +1,12 @@
+.syntax_highlighter {
+  position: relative;
+  background-color: white;
+  overflow: auto;
+  max-height: 10em;
+}
+
+.syntax_highlighter-code {
+  position: relative;
+  padding: 1em;
+  margin: 0;
+}

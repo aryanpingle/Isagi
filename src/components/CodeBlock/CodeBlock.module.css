@@ -1,0 +1,35 @@
+.code_block {
+  border-radius: 4px;
+  border: 0.1rem solid #3c3c3c;
+  background-color: whitesmoke;
+}
+
+.code_block-header {
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-columns: 1fr auto;
+  background-color: #cecece;
+}
+
+.code_block-header_tabs {
+  overflow: auto;
+  display: inline-flex;
+}
+
+.code_block-header_tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.code_block-header_tab {
+  cursor: pointer;
+  padding: 0.5rem;
+  flex-shrink: 0;
+}
+
+.code_block-header_tab.tab--selected {
+  background-color: white;
+}
+
+.code_block-header_copy {
+  margin: auto 0.5rem;
+}

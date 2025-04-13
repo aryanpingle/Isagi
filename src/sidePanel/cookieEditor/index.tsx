@@ -9,6 +9,16 @@ import { MdOutlineRefresh } from "react-icons/md";
 import { useModal } from "@/components/Modal";
 import { AddCookieButton } from "./components/AddCookieButton";
 import { ChromeCookie } from "@/utils/cookie";
+import { ExportCookiesButton } from "./components/ExportCookiesButton";
+
+// Highlighting
+import hljs from "highlight.js/lib/core";
+import hljsJavascript from "highlight.js/lib/languages/javascript";
+import hljsJSON from "highlight.js/lib/languages/json";
+import hljsPlainText from "highlight.js/lib/languages/plaintext";
+hljs.registerLanguage("javascript", hljsJavascript);
+hljs.registerLanguage("json", hljsJSON);
+hljs.registerLanguage("text", hljsPlainText);
 
 const CookieEditorPage = () => {
   const {
@@ -20,15 +30,22 @@ const CookieEditorPage = () => {
   const [cookies, setCookies] = useState<ChromeCookie[]>([]);
   const [query, setQuery] = useState<string>("");
 
+  // Load cookies
   useEffect(() => {
     if (!tab) return;
+
+    if (tab.url === undefined) {
+      setCookies([]);
+      return;
+    }
+
     chrome.cookies.getAll({ url: tab.url }).then((cookies) => {
       setCookies(cookies);
     });
   }, [tab]);
 
+  // Add a cookie to the (local) cookies list
   const handleCookieAdded = useCallback((cookie: ChromeCookie) => {
-    // Add this cookie to the (local) cookies list
     setCookies((cookies) => {
       return [...cookies, cookie];
     });
@@ -104,6 +121,14 @@ const CookieEditorPage = () => {
           setIsModalOpen={setIsModalOpen}
           setModalDetails={setModalDetails}
           onCookieAdded={handleCookieAdded}
+        />
+        <ExportCookiesButton
+          withShadow
+          disabled={displayedCookies.length === 0}
+          backgroundColor="#7DD4A8"
+          cookies={displayedCookies}
+          setIsModalOpen={setIsModalOpen}
+          setModalDetails={setModalDetails}
         />
       </div>
       {modalNode}
